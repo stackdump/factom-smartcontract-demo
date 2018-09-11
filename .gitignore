@@ -1,0 +1,6 @@
+*.pid
+out.txt
+wallet.txt
+*.pyc
+Pipfile*
+*-secret-key
