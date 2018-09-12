@@ -1,6 +1,5 @@
 """
-Incomplete - this contains code that would validate a game of tic-tac-toe
-but the client.py doesn't yet implement the full API calls needed to retrieve all events
+this contains code that validates a game of tic-tac-toe played on factom blockchain
 """
 
 import sys
