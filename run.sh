@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-echo 'Starting factomd'
-factomd -count=5 -blktime=20 -network=LOCAL -startdelay=15 &> out.txt &
-echo -n $! > factomd.pid
-echo 'waiting 30s...'
-sleep 30
 
-echo 'Starting factom-walletd'
-factom-walletd &> wallet.txt &
-echo -n $! > wallet.pid
+if [[ ! -f playerX-secret-key  ]] ; then
+    python ./src/gen_keys.py
+else
+    echo using existing keys
+fi
 
-echo 'importing test wallet address:'
-factom-cli importaddress Fs3E9gV6DXsYzf7Fqx1fVBQPQXV695eP3k5XbmHEZVRLkMdD9qCK
+# simulate a game of tic-tac-toe
+python ./src/play.py
+
+# run the auditor
+# FIXME

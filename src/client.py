@@ -3,13 +3,17 @@ Provide a python API for many of the factom API calls
 
 see: https://docs.factom.com/api for more details on both the wallet & factomd APIs
 """
+import json # DEBUG
 import requests
 import time
+import codecs
 
 SLEEP = 2
 FACTOM_URL = 'http://localhost:8088/v2'
 WALLET_URL = 'http://localhost:8089/v2'
 HEADERS = {'content-type' : 'application/json'}
+
+ROOT_KEYMR = "0000000000000000000000000000000000000000000000000000000000000000"
 
 def create_ec_address():
     """  Create a new EC address """
@@ -104,8 +108,8 @@ def _get_commit_chain(ec_address, content, external_ids):
         "params": {
             "chain": {
                 "firstentry": {
-                    "content": _hex(content),
-                    "extids": [ _hex(_id) for _id in external_ids ] 
+                    "content": _hexencode(content),
+                    "extids": [ _hexencode(_id) for _id in external_ids ] 
                 }
             },
             "ecpub": ec_address
@@ -137,9 +141,9 @@ def _get_commit_entry(ec_address, chainid, content, external_ids):
         "params": {
             "ecpub": ec_address,
             "entry": {
-                "content": _hex(content),
+                "content": _hexencode(content),
                 "chainid": chainid,
-                "extids": [ _hex(_id) for _id in external_ids ] 
+                "extids": [ _hexencode(_id) for _id in external_ids ] 
             }
         }
     }
@@ -148,6 +152,8 @@ def _get_commit_entry(ec_address, chainid, content, external_ids):
     if 'result' not in result_dict:
         raise Exception(result_dict['error'])
     return result_dict['result']['commit'], result_dict['result']['reveal']
+
+
 
 def get_entry(hash):
     """ Get an entry  """
@@ -161,15 +167,68 @@ def get_entry(hash):
     }
     r = requests.post(FACTOM_URL, json=data, headers=HEADERS)
     result_dict = r.json()
+
+    if 'result' not in result_dict:
+        raise Exception(result_dict['error'])
+
+    result_dict['result']['content'] = _hexdecode(result_dict['result']['content'])
+    result_dict['result']['extids'] = [ _hexdecode(_id) for _id in result_dict['result']['extids'] ]
+
     return result_dict['result']
 
-def get_all_entries(chainid):
+def get_chain_head(chainid):
+    """ Get chain head """
+    data = {
+        "id": 0,
+        "jsonrpc": "2.0",
+        "method": "chain-head",
+        "params": {
+            "chainid": chainid
+        }
+    }
+    r = requests.post(FACTOM_URL, json=data, headers=HEADERS)
+    result_dict = r.json()
+    return result_dict['result']['chainhead']
+
+def get_entry_block(chainhead):
+    """ Get chain head """
+    data = {
+        "id": 0,
+        "jsonrpc": "2.0",
+        "method": "entry-block",
+        "params": {
+            "keymr": chainhead
+        }
+    }
+    r = requests.post(FACTOM_URL, json=data, headers=HEADERS)
+    result_dict = r.json()
+    return result_dict['result']
+
+def get_all_blocks(chainid):
     """ Get an entry  """
-    # FIXME implement all the same calls made in get_all_entries.txt
-    # : need to query chainhead, and then retrieve and validate all entries
-    return []
+    chainhead = get_chain_head(chainid)
+    blocks = []
+    entry_block = get_entry_block(chainhead)
+    blocks.append(entry_block)
 
-def _hex(s):
-    """ String to hex. Source: https://stackoverflow.com/a/12214880 """
+    while entry_block['header']['prevkeymr'] != ROOT_KEYMR:
+        entry_block = get_entry_block(entry_block['header']['prevkeymr'])
+        blocks.append(entry_block)
 
-    return "".join("{:02x}".format(ord(c)) for c in s)
+    return blocks
+
+def get_all_entries(chainid):
+    blocks = get_all_blocks(chainid)
+
+    entries = []
+    for block in blocks:
+        for entry in block['entrylist']:
+            entries.append(get_entry(entry['entryhash']))
+
+    return entries
+
+def _hexencode(_string):
+    return codecs.encode(bytes(_string.encode()), encoding='hex').decode()
+
+def _hexdecode(b64_string):
+    return codecs.decode(b64_string, "hex").decode('utf-8')

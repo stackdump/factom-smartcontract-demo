@@ -13,14 +13,14 @@ import time
 import ed25519
 import client as fct
 
-EC1 = os.environ.get('EC1', 'EC1yRDsWQ8SHwRiLFP2hzAue3idexpzjBkgXHptrHJbHtHSLNYJM')
+EC1 = os.environ.get('EC1', 'EC3Hu1W7uMHf7CtSva1cMyr5rXKsu7rVqQtkJCDHqEV9dgh5FjAj')
 """ Entry Credit Address - override w/ an environment variable """
 
 FA1 = os.environ.get('FA1', 'FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q')
 """ Factoid Address - override w/ an environment variable """
 
 AUDIT_PROGRAM_SHA1='028b635a83df0bd54707fecd9d818edba5049b5a'
-""" fake sha1 hash - in reality this should probably reference a Github commit """
+""" fake sha1 hash - in reality this should reference a Github commit/sha1 hash """
 
 GAME_NAME = 'XO-' + str(time.time())
 """ external_id defining specific to a given game """
@@ -88,6 +88,7 @@ def verify(**payload):
     event = json.loads(payload['event'])
     verify_key = SIGNING_KEYS[event['player']].get_verifying_key()
     verify_key.verify(bytes.fromhex(payload['sig']), bytes(payload['event'], 'utf-8'))
+    return True
 
 def move(player, move):
     """ encode moves as chain entry"""

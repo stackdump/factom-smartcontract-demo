@@ -19,7 +19,47 @@ Install needed python libraries
 pip install -r requirements.txt
 ```
 
-Generate new keys used to sign entries being pushed into a factom chain.
+Start factomd & factom-wallet
+
+```
+./start.sh
+```
+If walletd started sucessfully you should be able to see the control panel
+[http://127.0.0.1:8090](http://127.0.0.1:8090) in a browser.
+
+
+If walletd started sucessfully you should be able to list some addressess
+that were automatically imported by the run.sh script
+```
+user@dev:~/smartcontracts$ factom-cli listaddresses
+FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q 20000
+EC3Hu1W7uMHf7CtSva1cMyr5rXKsu7rVqQtkJCDHqEV9dgh5FjAj 0
+```
+
+Buy some entry credits using the demo account.
+
+```
+user@dev:~$ factom-cli buyec FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q  EC3Hu1W7uMHf7CtSva1cMyr5rXKsu7rVqQtkJCDHqEV9dgh5FjAj  500
+TxID: e320e35e40fd66af8faa78e34005dfebd2f9c13080eb87665f59ede0d2af9706
+Status: TransactionACK
+```
+
+Listing the addresses again shows that we have converted factoids to entry credits.
+```
+user@dev:~/smartcontracts$ factom-cli listaddresses
+FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q 19999.99488
+EC3Hu1W7uMHf7CtSva1cMyr5rXKsu7rVqQtkJCDHqEV9dgh5FjAj 500
+```
+
+### Run Examples
+
+#### Generate identity keys
+
+Create key files used to sign & valid entries being pushed into a factom chain.
+
+NOTE: in this example we pretend to be both PlayerX and PlayerO
+in a more realistic environment each user would only have access to their own secret key
+and the public key of the other user.
 
 ```
  user@dev:~/smartcontracts$ python src/gen_keys.py
@@ -29,33 +69,6 @@ playerX public key is b'f0ebc6091e5d6d3772328651b4fc3efcf8bc7a4aec6589a5857494f3
 wrote playerO-secret-key
 playerO public key is b'a6d574fadf8f2a8085a4c3096878a82bce49d76a84b0d50ef626bee618e26cba'
 ```
-
-Start factomd & factom-wallet
-
-```
-./run.sh
-```
-If walletd started sucessfully you should be able to see the control panel
-[http://127.0.0.1:8090](http://127.0.0.1:8090) in a browser.
-
-
-If walletd started sucessfully you should be able to list some addresses
-```
-user@dev:~/smartcontracts$ factom-cli listaddresses
-FA2D6CWCMGBYQEeTFcw8wiNKjNfNFhvNfCxbTZHHg15MYBp31h8W 0
-FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q 19999.99426
-EC1yRDsWQ8SHwRiLFP2hzAue3idexpzjBkgXHptrHJbHtHSLNYJM 88
-```
-
-Buy some entry credits using the demo account.
-
-```
-user@dev:~$ factom-cli buyec FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q  EC1yRDsWQ8SHwRiLFP2hzAue3idexpzjBkgXHptrHJbHtHSLNYJM 500
-TxID: e320e35e40fd66af8faa78e34005dfebd2f9c13080eb87665f59ede0d2af9706
-Status: TransactionACK
-```
-
-### Run Examples
 
 #### Simulate a game of tic-tac-toe
 
@@ -116,9 +129,23 @@ Successfully caught bad sig
 
 #### Audit event stream for valid gameplay
 
+Run the audit program passing in the chainid as an arg.
+
 ```
 user@dev:~/smartcontracts$ python src/audit.py
-# FIXME this is not yet implemented
+['./src/audit.py', '2d0fefc826d4a6e8c4bf8db187980bd5e743fc161ede0aa20cc75a577afa98d4']
+GameInfo:
+ {'name': 'XO-1536763959.0636046', 'audit_program': '028b635a83df0bd54707fecd9d818edba5049b5a', 'PlayerX': 'pubkey', 'PlayerO': 'pubkey'}
+Moves:
+{'player': 'X', 'move': '11', 'seq': 1}
+{'player': 'O', 'move': '02', 'seq': 2}
+{'player': 'X', 'move': '22', 'seq': 3}
+{'player': 'O', 'move': '00', 'seq': 4}
+{'player': 'X', 'move': '01', 'seq': 5}
+{'player': 'O', 'move': '10', 'seq': 6}
+{'player': 'X', 'move': '21', 'seq': 7}
+Final:
+ {'player': 'X', 'result': 'Win', 'seq': 8}
 ```
 
 ### Shutdown
@@ -128,3 +155,14 @@ Shutdown factom services w/ this shell script
 ```
 ./stop.sh
 ```
+
+### Tips/Tricks
+
+On linux you can spy on traffic going to/from factomd
+using https://linux.die.net/man/1/tcpflow
+
+```
+sudo tcpflow -c -i lo tcp port 8088
+```
+
+See a full capture of traffic from this demo  in [traffic_capture_full_demo.txt](./traffic_capture_full_demo.txt)
