@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 echo 'Starting factomd'
-factomd -count=5 -blktime=20 -network=LOCAL -startdelay=15 &> out.txt &
+# use logstash
+factomd -count=1 -blktime=20 -network=LOCAL -startdelay=15 -logstash -logurl=127.0.0.1:8345 &> out.txt & 
+
+#factomd -count=5 -blktime=20 -network=LOCAL -startdelay=15 &> out.txt &
 echo -n $! > factomd.pid
 
 echo "Waiting for factomd API to be up..."

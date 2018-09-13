@@ -1,0 +1,89 @@
+# Summary of API JsonRPC calls
+
+### list wallets
+factoid-balance
+entry-credit-balance
+
+### buy EC
+entry-credit-rate
+entry-credit-rate
+entry-credit-rate
+entry-credit-rate
+entry-credit-rate
+entry-credit-rate
+factoid-balance
+entry-credit-rate
+entry-credit-rate
+entry-credit-rate
+factoid-submit
+ack
+ack
+
+### 1
+entry-credit-balance
+chain-head
+commit-chain
+reveal-chain
+
+### 2
+entry-credit-balance
+chain-head
+commit-entry
+reveal-entry
+
+### 3
+entry-credit-balance
+chain-head
+commit-entry
+reveal-entry
+
+### 4
+entry-credit-balance
+chain-head
+commit-entry
+reveal-entry
+
+### 5
+entry-credit-balance
+chain-head
+commit-entry
+reveal-entry
+
+### 6
+entry-credit-balance
+chain-head
+commit-entry
+reveal-entry
+
+### 7
+entry-credit-balance
+chain-head
+commit-entry
+reveal-entry
+
+### 8
+entry-credit-balance
+chain-head
+commit-entry
+reveal-entry
+
+### 9
+entry-credit-balance
+chain-head
+commit-entry
+reveal-entry
+
+### Replay event data
+chain-head
+chain-head
+entry-block
+entry-block
+entry
+entry
+entry
+entry
+entry
+entry
+entry
+entry
+entry

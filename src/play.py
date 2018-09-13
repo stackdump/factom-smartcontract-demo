@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 This file module generates valid tic-tac-toe game moves
 on the factom blockchain

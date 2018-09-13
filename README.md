@@ -166,3 +166,5 @@ sudo tcpflow -c -i lo tcp port 8088
 ```
 
 See a full capture of traffic from this demo  in [traffic_capture_full_demo.txt](./traffic_capture_full_demo.txt)
+
+Here's a list of each api method being invoked - separated into groups of operations [api-summary.txt](api-summary.txt)

@@ -1,5 +1,5 @@
 """
-this contains code that validates a game of tic-tac-toe played on factom blockchain
+This module contains code that validates a game of tic-tac-toe played on factom blockchain
 """
 
 import sys

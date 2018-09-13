@@ -18,4 +18,5 @@ Wed Sep 12 10:59:08 CDT 2018
 
 - [ ] show how state of board could be written as a snapshot event
 - [ ] include actual validation keys in the initial chain entry instead of placeholder
+- [ ] automatically buy EC if EC1 address is low
 
