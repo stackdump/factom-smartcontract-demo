@@ -24,7 +24,7 @@ Start factomd & factom-wallet
 ```
 ./start.sh
 ```
-If walletd started sucessfully you should be able to see the control panel
+If factomd started sucessfully you should be able to see the control panel
 [http://127.0.0.1:8090](http://127.0.0.1:8090) in a browser.
 
 
@@ -164,6 +164,8 @@ using https://linux.die.net/man/1/tcpflow
 ```
 sudo tcpflow -c -i lo tcp port 8088
 ```
+
+### Net Capture from a Demo run
 
 See a full capture of traffic from this demo  in [traffic_capture_full_demo.txt](./traffic_capture_full_demo.txt)
 
