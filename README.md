@@ -72,7 +72,12 @@ playerO public key is b'a6d574fadf8f2a8085a4c3096878a82bce49d76a84b0d50ef626bee6
 
 #### Simulate a game of tic-tac-toe
 
-Creates a valid stream of event entries on a factom chain
+Run the demo
+```
+./run.sh
+```
+
+This creates a valid stream of event entries on a factom chain
 
 ```
 user@dev:~/smartcontracts$ python src/play.py
